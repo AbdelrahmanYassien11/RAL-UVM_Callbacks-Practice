@@ -1,8 +1,8 @@
 `include "uvm_macros.svh"
 import uvm_pkg::*;
-
-`include "interface.sv"
-`include "base_test.sv"
+import pkg::*;
+// `include "interface.sv"
+// `include "base_test.sv"
 
 module tb_top;
   bit clk;
