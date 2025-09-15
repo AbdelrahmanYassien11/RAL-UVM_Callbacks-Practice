@@ -1,4 +1,3 @@
-`include "package.sv"
 class base_test extends uvm_test;
   env env_o;
   `uvm_component_utils(base_test)

@@ -13,5 +13,4 @@ package pkg;
     `include "agent.sv"
     `include "env.sv"
     `include "base_test.sv"
-    `include "interface.sv"
 endpackage : pkg
