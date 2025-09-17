@@ -32,5 +32,8 @@ class reg_seq extends uvm_sequence#(seq_item);
     
     reg_model.mod_reg.intr_msk_reg.write(status, 32'h5555_5555);
     reg_model.mod_reg.intr_msk_reg.read(status, read_data);
+
+    reg_model.mod_reg.intr_msk_reg.write(status, 32'hcafe_bee);
+    reg_model.mod_reg.intr_msk_reg.read(status, read_data);
   endtask
 endclass
