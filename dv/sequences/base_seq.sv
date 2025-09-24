@@ -30,13 +30,26 @@ class reg_seq extends uvm_sequence#(seq_item);
     reg_model.mod_reg.control_reg.write(status, 32'h1234_1234);
     reg_model.mod_reg.control_reg.read(status, read_data);
     
-    reg_model.mod_reg.intr_msk_reg.write(status, 32'h5555_5555);
-    reg_model.mod_reg.intr_msk_reg.read(status, read_data);
+    reg_model.mod_reg.control_reg.write(status, 32'habac_abac);
+    reg_model.mod_reg.control_reg.read(status, read_data);
 
-    // reg_model.mod_reg.intr_msk_reg.write(status, 32'hcafe_bee, .path(UVM_BACKDOOR));
-    reg_model.mod_reg.intr_msk_reg.write(status, 32'hcafe_bee, UVM_BACKDOOR, reg_model.mod_reg.default_map);
+    reg_model.mod_reg.intr_sts_reg.write(status, 32'heeee_eeee);
+    reg_model.mod_reg.intr_sts_reg.read(status, read_data);
+
+    reg_model.mod_reg.intr_msk_reg.write(status, 32'h5555_5555, UVM_BACKDOOR, reg_model.mod_reg.default_map);
     if (status != UVM_IS_OK) `uvm_error("BD_WRITE","backdoor write failed");
-    reg_model.mod_reg.intr_msk_reg.peek(status, read_data);
+    #10ns;
+    reg_model.mod_reg.intr_msk_reg.read(status, read_data); //12341234
+
+    reg_model.mod_reg.intr_msk_reg.poke(status, 32'hcafe_bee, /*UVM_BACKDOOR, reg_model.mod_reg.default_map*/);
+    if (status != UVM_IS_OK) `uvm_error("BD_WRITE","backdoor write failed");
+    reg_model.mod_reg.intr_msk_reg.read(status, read_data);//1234124
+    `uvm_info(get_type_name(),$sformatf("Read_Data_Value from DUT = %h", read_data),UVM_LOW)
+
+    read_data = reg_model.mod_reg.intr_msk_reg.get_mirrored_value();
+    `uvm_info(get_type_name(),$sformatf("Read_Data_Value from RAL without update = %h", read_data),UVM_LOW)
+
+
 
   endtask
 endclass

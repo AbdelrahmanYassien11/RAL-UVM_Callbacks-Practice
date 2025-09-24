@@ -15,7 +15,7 @@ class ral_control_reg extends uvm_reg;
     dbg_en = uvm_reg_field::type_id::create("dbg_en");
     mod_en = uvm_reg_field::type_id::create("mod_en");
     
-    this.add_hdl_path_slice("tb_top.DUT.control_reg", 0, 32);
+    this.add_hdl_path_slice("DUT.control_reg", 0, 32);
 
     // ctrl_en.add_hdl_path   ("tb_top.DUT.ctrl_en", 3, 29); // [31:3]
     // parity_en.add_hdl_path 
@@ -46,7 +46,7 @@ class ral_intr_sts_reg extends uvm_reg;
     r_axi_err = uvm_reg_field::type_id::create("r_axi_err");
     w_axi_err = uvm_reg_field::type_id::create("w_axi_err");
     
-    this.add_hdl_path_slice("tb_top.DUT.intr_sts_reg", 0, 32);
+    this.add_hdl_path_slice("intr_sts_reg", 0, 32);
     misc_err.configure        (this, 30, 2, "RW", 0, 1'b0, 1, 1, 0);
     r_axi_err.configure   (this,  1, 1, "W1C", 0, 1'b0, 1, 1, 0);
     w_axi_err.configure   (this,  1, 0, "W1C", 0, 1'b0, 1, 1, 0);
@@ -70,7 +70,7 @@ class ral_intr_msk_reg extends uvm_reg;
     r_axi_err_msk = uvm_reg_field::type_id::create("r_axi_err_msk");
     w_axi_err_msk = uvm_reg_field::type_id::create("w_axi_err_msk");
     
-    this.add_hdl_path_slice("tb_top.DUT.intr_msk_reg", 0, 32);
+    this.add_hdl_path_slice("intr_msk_reg", 0, 32);
 
     err_msk.configure       (this, 30, 2, "RW", 0, 1'b0, 1, 1, 0);
     r_axi_err_msk.configure (this,  1, 1, "RW", 0, 1'b0, 1, 1, 0);
@@ -105,7 +105,7 @@ class module_reg extends uvm_reg_block;
     
     default_map = create_map("", `UVM_REG_ADDR_WIDTH'h0, 4, UVM_LITTLE_ENDIAN, 1);
     
-    this.add_hdl_path("tb_top.DUT");
+    // this.add_hdl_path("tb_top.DUT");
 
     this.default_map.add_reg(control_reg,  `UVM_REG_ADDR_WIDTH'h0, "RW");
     this.default_map.add_reg(intr_sts_reg, `UVM_REG_ADDR_WIDTH'h4, "RW");
@@ -129,7 +129,9 @@ class RegModel_SFR extends uvm_reg_block;
   
   virtual function void build();
     default_map = create_map("axi_map", 'h0, 4, UVM_LITTLE_ENDIAN, 0);
-   
+    
+    this.add_hdl_path("tb_top.DUT");
+
     mod_reg = module_reg::type_id::create("mod_reg");
     mod_reg.configure(this);
     mod_reg.build();

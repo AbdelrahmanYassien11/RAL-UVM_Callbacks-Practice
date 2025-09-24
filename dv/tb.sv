@@ -8,7 +8,7 @@ module tb_top;
   bit clk;
   bit reset_n;
 
-  always #2 clk = ~clk;
+  always #5 clk = ~clk;
   
   initial begin
     //clk = 0;

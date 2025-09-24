@@ -14,6 +14,7 @@ class env extends uvm_env;
     reg_model = RegModel_SFR::type_id::create("reg_model");
     reg_model.build();
     reg_model.reset();
+    // reg_model.set_auto_predict(0);
     reg_model.lock_model();
     reg_model.print();
     
