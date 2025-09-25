@@ -25,8 +25,7 @@ module design_sfr(
       intr_msk_reg <= 1; // reset value
     end
   end
-  
-  
+
   always @(posedge clk) begin
     if(i_wr_en) begin
       case(i_waddr)
@@ -35,23 +34,41 @@ module design_sfr(
         'h8 : intr_msk_reg <= i_wdata;
       endcase
       o_wready <= 1; //Issue
-      @(posedge clk);
+    end
+    else begin
       o_wready <= 0;
     end
-    else o_wready <= 0;
   end
         
+  // always @(posedge clk) begin
+  //   if(i_rd_en & !i_wr_en) begin
+  //     case(i_raddr)
+  //       'h0 : o_rdata <= control_reg;
+  //       'h4 : o_rdata <= intr_sts_reg;
+  //       'h8 : o_rdata <= intr_msk_reg;
+  //     endcase
+  //     o_rvalid <= 1;
+  //     @(posedge clk);
+  //     o_rvalid <= 0;
+  //   end
+  //   else o_rvalid <= 0;
+  // end
+
   always @(posedge clk) begin
-    if(i_rd_en & !i_wr_en) begin
-      case(i_raddr)
-        'h0 : o_rdata <= control_reg;
-        'h4 : o_rdata <= intr_sts_reg;
-        'h8 : o_rdata <= intr_msk_reg;
-      endcase
-      o_rvalid <= 1;
-      @(posedge clk);
-      o_rvalid <= 0;
-    end
-    else o_rvalid <= 0;
+      if(!reset_n) begin
+          o_rdata <= 0;
+          o_rvalid <= 0;
+      end
+      else if(i_rd_en & !i_wr_en) begin
+          case(i_raddr)
+              'h0 : o_rdata <= control_reg;
+              'h4 : o_rdata <= intr_sts_reg;
+              'h8 : o_rdata <= intr_msk_reg;
+          endcase
+          o_rvalid <= 1;
+      end
+      else begin
+          o_rvalid <= 0;
+      end
   end
 endmodule
