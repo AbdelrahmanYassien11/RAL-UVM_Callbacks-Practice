@@ -34,6 +34,7 @@ endclass
 
 class reg_test extends base_test;
   `uvm_component_utils(reg_test)
+  derived_cb drvd_cb;
   
   function new(string name = "reg_test", uvm_component parent = null);
     super.new(name, parent);
@@ -41,8 +42,17 @@ class reg_test extends base_test;
   
   function void build_phase(uvm_phase phase);
     super.build_phase(phase);
+    // Create callback object
+    drvd_cb = derived_cb::type_id::create("drvd_cb", this);
   endfunction
   
+  function void connect_phase(uvm_phase phase);
+    super.connect_phase(phase);
+    // Register callback with driver
+    uvm_callbacks#(driver, driver_cb)::add(env_o.agt.drv, drvd_cb);
+    `uvm_info(get_type_name(), "Driver callback registered", UVM_LOW)
+  endfunction
+
   task test_imp();
     reg_seq rseq = reg_seq::type_id::create("rseq");
     rseq.start(env_o.agt.seqr);

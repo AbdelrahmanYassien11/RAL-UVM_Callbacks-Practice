@@ -1,6 +1,8 @@
 class driver extends uvm_driver#(seq_item);
   virtual sfr_if vif;
   `uvm_component_utils(driver)
+
+  `uvm_register_cb(driver, driver_cb) // Enable callbacks
   
   function new(string name = "driver", uvm_component parent = null);
     super.new(name, parent);
@@ -22,6 +24,8 @@ class driver extends uvm_driver#(seq_item);
     // Driver to the DUT
     seq_item_port.get_next_item(req);
     //void'(req.randomize());
+      // CALLBACK: Before sending
+      `uvm_do_callbacks(driver, driver_cb, pre_send(this, req))
     // Driving Logic
     @(negedge vif.clk);
     vif.i_rd_en <= req.rd_or_wr;
