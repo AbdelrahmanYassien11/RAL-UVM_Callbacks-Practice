@@ -14,30 +14,34 @@ class driver extends uvm_driver#(seq_item);
   
   task run_phase (uvm_phase phase);
     forever begin
-      // Driver to the DUT
-      seq_item_port.get_next_item(req);
-      //void'(req.randomize());
-      // Driving Logic
-      @(negedge vif.clk);
-      vif.i_rd_en <= req.rd_or_wr;
-      vif.i_wr_en <= !req.rd_or_wr;
-      
-      if(req.rd_or_wr) begin // Read Operation
-        vif.i_raddr <= req.addr;
-        //@(posedge vif.clk);
-        wait(vif.o_rvalid)
-        @(posedge vif.clk);
-        req.data = vif.o_rdata;        
-        `uvm_info(get_type_name, $sformatf("READ: raddr = %0h, rdata = %0h", req.addr, req.data), UVM_LOW);
-      end 
-      else begin // Write Operation
-        vif.i_waddr <= req.addr;
-        vif.i_wdata <= req.data;
-        //@(posedge vif.clk);
-        wait(vif.o_wready);
-        `uvm_info(get_type_name, $sformatf("WRITE: waddr = %0h, wdata = %0h", req.addr, req.data), UVM_LOW);
-      end
-      seq_item_port.item_done();
+      drive();
     end
   endtask
+
+  task drive();
+    // Driver to the DUT
+    seq_item_port.get_next_item(req);
+    //void'(req.randomize());
+    // Driving Logic
+    @(negedge vif.clk);
+    vif.i_rd_en <= req.rd_or_wr;
+    vif.i_wr_en <= !req.rd_or_wr;
+    
+    if(req.rd_or_wr) begin // Read Operation
+      vif.i_raddr <= req.addr;
+      //@(posedge vif.clk);
+      wait(vif.o_rvalid)
+      @(posedge vif.clk);
+      req.data = vif.o_rdata;        
+      `uvm_info(get_type_name, $sformatf("READ: raddr = %0h, rdata = %0h", req.addr, req.data), UVM_LOW);
+    end 
+    else begin // Write Operation
+      vif.i_waddr <= req.addr;
+      vif.i_wdata <= req.data;
+      //@(posedge vif.clk);
+      wait(vif.o_wready);
+      `uvm_info(get_type_name, $sformatf("WRITE: waddr = %0h, wdata = %0h", req.addr, req.data), UVM_LOW);
+    end
+    seq_item_port.item_done();
+  endtask : drive
 endclass

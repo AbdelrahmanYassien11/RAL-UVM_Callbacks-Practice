@@ -4,6 +4,7 @@ class seq_item extends uvm_sequence_item;
   rand bit rd_or_wr; // rd_or_wr = 0 (Write)
                      // rd_or_wr = 1 (Read)
   
+  
   function new(string name = "seq_item");
     super.new(name);
   endfunction

@@ -39,20 +39,6 @@ module design_sfr(
       o_wready <= 0;
     end
   end
-        
-  // always @(posedge clk) begin
-  //   if(i_rd_en & !i_wr_en) begin
-  //     case(i_raddr)
-  //       'h0 : o_rdata <= control_reg;
-  //       'h4 : o_rdata <= intr_sts_reg;
-  //       'h8 : o_rdata <= intr_msk_reg;
-  //     endcase
-  //     o_rvalid <= 1;
-  //     @(posedge clk);
-  //     o_rvalid <= 0;
-  //   end
-  //   else o_rvalid <= 0;
-  // end
 
   always @(posedge clk) begin
       if(!reset_n) begin
